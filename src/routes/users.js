@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/database');
+const { query: dbQuery, pool } = require('../config/database');
 
 /**
  * @swagger
@@ -45,7 +45,7 @@ const db = require('../config/database');
  */
 router.get('/', async (req, res) => {
     try {
-        const users = await db.query('SELECT * FROM users ORDER BY created_at DESC');
+        const users = await dbQuery('SELECT * FROM users ORDER BY created_at DESC');
         res.json({ success: true, data: users });
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -79,7 +79,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const users = await db.query('SELECT * FROM users WHERE id = ?', [id]);
+        const users = await dbQuery('SELECT * FROM users WHERE id = $1', [id]);
 
         if (users.length === 0) {
             return res.status(404).json({ success: false, error: 'User not found' });
@@ -129,18 +129,14 @@ router.post('/', async (req, res) => {
             });
         }
 
-        const result = await db.query(
-            'INSERT INTO users (name, email) VALUES (?, ?)',
+        const result = await dbQuery(
+            'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *',
             [name, email]
         );
 
         res.status(201).json({
             success: true,
-            data: {
-                id: result.insertId,
-                name,
-                email
-            }
+            data: result[0]
         });
     } catch (error) {
         console.error('Error creating user:', error);
@@ -192,24 +188,25 @@ router.put('/:id', async (req, res) => {
 
         const updates = [];
         const values = [];
+        let paramCount = 1;
 
         if (name) {
-            updates.push('name = ?');
+            updates.push(`name = $${paramCount++}`);
             values.push(name);
         }
         if (email) {
-            updates.push('email = ?');
+            updates.push(`email = $${paramCount++}`);
             values.push(email);
         }
 
         values.push(id);
 
-        const result = await db.query(
-            `UPDATE users SET ${updates.join(', ')} WHERE id = ?`,
+        const result = await pool.query(
+            `UPDATE users SET ${updates.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = $${paramCount}`,
             values
         );
 
-        if (result.affectedRows === 0) {
+        if (result.rowCount === 0) {
             return res.status(404).json({ success: false, error: 'User not found' });
         }
 
@@ -243,9 +240,9 @@ router.delete('/:id', async (req, res) => {
     try {
         const { id } = req.params;
 
-        const result = await db.query('DELETE FROM users WHERE id = ?', [id]);
+        const result = await pool.query('DELETE FROM users WHERE id = $1', [id]);
 
-        if (result.affectedRows === 0) {
+        if (result.rowCount === 0) {
             return res.status(404).json({ success: false, error: 'User not found' });
         }
 
