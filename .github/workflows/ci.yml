@@ -36,11 +36,12 @@ jobs:
         run: npm run test:coverage
         continue-on-error: true
       
-      - name: Análise SonarCloud
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # TEMPORARIAMENTE DESABILITADO - Configurar branch padrão no SonarCloud primeiro
+      # - name: Análise SonarCloud
+      #   uses: SonarSource/sonarcloud-github-action@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       
       - name: Verificar cobertura de testes
         run: npm run coverage:check
