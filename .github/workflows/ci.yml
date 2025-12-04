@@ -50,6 +50,7 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.coverage.exclusions=tests/**,src/routes/vulnerable.js
             -Dsonar.qualitygate.wait=false
+            -Dsonar.branch.name=main
       
       - name: Verificar cobertura de testes
         run: npm run coverage:check
