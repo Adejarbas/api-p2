@@ -14,7 +14,7 @@ COPY package*.json ./
 
 # Instalar dependências de produção
 FROM base AS dependencies
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Instalar todas as dependências (incluindo dev) para build
 FROM base AS build
