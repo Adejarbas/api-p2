@@ -9,7 +9,19 @@ const path = require('path');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
+// Middlewares de logging e monitoramento
+const logger = require('./config/logger');
+const httpLogger = require('./middleware/logging');
+const { errorHandler } = require('./middleware/errorHandler');
+const { metricsMiddleware, getMetrics } = require('./middleware/metrics');
+const healthRouter = require('./routes/health');
+
 const app = express();
+
+// Middlewares de logging e métricas (antes das rotas)
+app.use(httpLogger);
+app.use(metricsMiddleware);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -275,17 +287,32 @@ app.post('/encrypt', (req, res) => {
  *       200:
  *         description: Mensagem de boas-vindas
  */
+// Rotas de monitoramento
+app.use(healthRouter);
+app.get('/metrics', getMetrics);
+
 app.get('/', (req, res) => {
     res.json({
         message: 'Vulnerable API - SAST Demo',
         documentation: '/api-docs',
         warning: '⚠️ Esta API contém vulnerabilidades intencionais. NÃO USE EM PRODUÇÃO!',
-        crud: '/api/users (CRUD funcional com PostgreSQL)'
+        crud: '/api/users (CRUD funcional com PostgreSQL)',
+        monitoring: {
+            health: '/health',
+            metrics: '/metrics'
+        }
     });
 });
 
+// Middleware de erro (deve ser o último)
+app.use(errorHandler);
+
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, () => {
+    logger.info(`Server running on port ${PORT}`);
+    logger.info(`API Documentation: http://localhost:${PORT}/api-docs`);
+    logger.info(`Health Check: http://localhost:${PORT}/health`);
+    logger.info(`Metrics: http://localhost:${PORT}/metrics`);
     console.log(`Server running on port ${PORT}`);
     console.log(`API Documentation: http://localhost:${PORT}/api-docs`);
     console.log(`API Key: ${API_KEY}`);

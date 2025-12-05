@@ -124,7 +124,7 @@ docker run -p 3000:3000 \
 
 ## 📊 Progresso do Projeto
 
-### ✅ Concluído (5/10 tópicos)
+### ✅ Concluído (8/10 tópicos - 80%)
 
 **Tópico 1: Estrutura Base da API**
 - [x] API Node.js com Express
@@ -152,28 +152,35 @@ docker run -p 3000:3000 \
 - [x] Branches main e develop
 - [x] Conventional Commits
 
-### 🔄 Próximos (5/10 tópicos)
-
 **Tópico 6: GitHub Actions - CI**
-- [ ] Workflow de CI
-- [ ] Testes automatizados
-- [ ] SonarCloud (SAST)
+- [x] Workflow de CI
+- [x] Testes automatizados
+- [x] Cobertura de código
+- [x] SonarCloud configurado
 
-**Tópico 7: Build Docker**
-- [ ] Versionamento semântico
-- [ ] Build automatizado
+**Tópico 7: Versionamento e Build Docker**
+- [x] Versionamento semântico automático
+- [x] Build automatizado com GitHub Actions
+- [x] Publicação no Docker Hub
+- [x] Tags automáticas (latest, sha, versão)
 
-**Tópico 8: Docker Hub**
-- [ ] Publicação de imagens
-- [ ] Tags automáticas
+**Tópico 8: Deploy Render - CD**
+- [x] Deploy automático configurado
+- [x] Variáveis de ambiente
+- [x] Aplicação em produção
+- [x] URL pública: https://api-p2-latest.onrender.com
 
-**Tópico 9: Deploy Render**
-- [ ] Deploy automático
-- [ ] Variáveis de ambiente
+### 🔄 Próximos (2/10 tópicos)
 
-**Tópico 10: Documentação**
+**Tópico 9: Monitoramento e Logs**
+- [ ] Configurar logs estruturados
+- [ ] Métricas de performance
+- [ ] Alertas de erro
+
+**Tópico 10: Documentação Final**
 - [ ] Guias completos
-- [ ] Configuração de secrets
+- [ ] Walkthrough do projeto
+- [ ] Apresentação para o professor
 
 ## �️ Tecnologias
 
