@@ -2,8 +2,6 @@ name: Build e Publicação Docker
 
 on:
   push:
-    branches:
-      - main
     tags:
       - 'v*'
   workflow_dispatch:
