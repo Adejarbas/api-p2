@@ -1,225 +1,399 @@
-# API P2 - DevSecOps (Integração e Entrega Contínua)
+# 🔐 API P2 - DevSecOps CI/CD Pipeline
 
-Projeto de API Node.js com vulnerabilidades intencionais para demonstração de ferramentas SAST (Static Application Security Testing), integrado com PostgreSQL, CI/CD e deploy automatizado.
+![CI](https://github.com/Adejarbas/api-p2/actions/workflows/ci.yml/badge.svg)
+![Docker Build](https://github.com/Adejarbas/api-p2/actions/workflows/docker-build.yml/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Adejarbas_api-p2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Adejarbas_api-p2)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Adejarbas_api-p2&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Adejarbas_api-p2)
 
-**⚠️ AVISO**: Esta API contém vulnerabilidades intencionais para fins educacionais. **NÃO USE EM PRODUÇÃO!**
+> **⚠️ ATENÇÃO:** Esta API contém vulnerabilidades intencionais para fins educacionais. **NÃO USE EM PRODUÇÃO!**
 
-## 🎯 Objetivo
+API REST desenvolvida para o Projeto P2 da disciplina de DevSecOps, demonstrando implementação completa de pipeline CI/CD com análise SAST, containerização Docker e deploy automatizado.
 
-Demonstrar um pipeline completo de DevSecOps incluindo:
-- ✅ API REST com Node.js + Express
-- ✅ Vulnerabilidades intencionais para SAST
-- ✅ CRUD funcional com PostgreSQL
-- ✅ Documentação automática com Swagger
-- ✅ Containerização com Docker
-- ✅ Gitflow e versionamento semântico
-- 🔄 CI/CD com GitHub Actions
-- 🔄 Análise de segurança com SonarCloud
-- 🔄 Deploy automático no Render
+---
 
-## � Documentação
+## 📋 Sobre o Projeto
 
-- **Swagger/OpenAPI**: http://localhost:3000/api-docs
-- **Repositório**: https://github.com/Adejarbas/api-p2
-- **Guia de Contribuição**: [CONTRIBUTING.md](CONTRIBUTING.md)
+Projeto acadêmico (P2) focado em **Integração e Entrega Contínua (CI/CD)** com ênfase em **DevSecOps**. A aplicação é uma API REST com vulnerabilidades intencionais para demonstrar ferramentas de análise estática de segurança (SAST).
 
-## �🚀 Como Rodar Localmente
+### 🎯 Objetivos
+
+- ✅ Implementar pipeline CI/CD completo
+- ✅ Integrar ferramentas SAST (SonarCloud)
+- ✅ Automatizar build e deploy com Docker
+- ✅ Demonstrar boas práticas de DevOps
+- ✅ Configurar monitoramento e logs estruturados
+
+---
+
+## 🚀 Links Importantes
+
+| Recurso | URL |
+|---------|-----|
+| **API em Produção** | https://api-p2-latest.onrender.com |
+| **Swagger UI** | https://api-p2-latest.onrender.com/api-docs |
+| **Health Check** | https://api-p2-latest.onrender.com/health |
+| **Métricas** | https://api-p2-latest.onrender.com/metrics |
+| **GitHub Actions** | https://github.com/Adejarbas/api-p2/actions |
+| **SonarCloud** | https://sonarcloud.io/project/overview?id=Adejarbas_api-p2 |
+| **Docker Hub** | https://hub.docker.com/r/danielrodriguesadejarbas/api-p2 |
+
+---
+
+## 🏗️ Arquitetura
+
+```mermaid
+graph TB
+    Dev[Desenvolvedor] -->|git push| GitHub[GitHub Repository]
+    GitHub -->|trigger| Actions[GitHub Actions]
+    
+    Actions -->|run tests| Tests[npm test]
+    Actions -->|SAST| Sonar[SonarCloud]
+    Actions -->|build| Docker[Docker Build]
+    
+    Docker -->|push| Hub[Docker Hub]
+    Hub -->|pull| Render[Render Deploy]
+    
+    Render -->|connect| DB[(PostgreSQL)]
+    Render -->|serve| Users[Usuários]
+    
+    Users -->|access| Swagger[Swagger UI]
+    Users -->|monitor| Health[Health Check]
+    Users -->|view| Metrics[Metrics]
+```
+
+---
+
+## ⚙️ Tecnologias
+
+### Backend
+- **Node.js 18** + **Express**
+- **PostgreSQL** (Render)
+- **Winston** (Logs estruturados)
+- **Morgan** (HTTP logging)
+- **Swagger UI** (Documentação)
+
+### DevOps
+- **GitHub Actions** (CI/CD)
+- **Docker** (Containerização)
+- **Docker Hub** (Registry)
+- **Render** (Hosting)
+- **SonarCloud** (SAST)
+
+---
+
+## 📦 Funcionalidades
+
+### API REST
+- ✅ CRUD completo de usuários
+- ✅ Endpoints vulneráveis (para SAST)
+- ✅ Documentação Swagger
+- ✅ Health checks
+- ✅ Métricas de performance
+
+### Monitoramento
+- ✅ Logs estruturados (JSON)
+- ✅ HTTP request logging
+- ✅ Error handling centralizado
+- ✅ Performance metrics
+
+### Segurança (Vulnerabilidades Intencionais)
+- ⚠️ SQL Injection
+- ⚠️ Command Injection
+- ⚠️ XSS (Cross-Site Scripting)
+- ⚠️ Path Traversal
+- ⚠️ Weak Cryptography
+- ⚠️ Hardcoded Credentials
+- ⚠️ SSRF
+- ⚠️ Code Injection
+
+---
+
+## 🚀 Começando
 
 ### Pré-requisitos
 
-- Node.js >= 18.0.0
-- npm >= 6.0.0
-- Conta no Render (para banco PostgreSQL)
+- Node.js 18+
+- PostgreSQL (ou usar banco do Render)
+- Docker (opcional, para testes locais)
 
-### Instalação
+### Instalação Local
 
 ```bash
-# Clonar repositório
+# Clone o repositório
 git clone https://github.com/Adejarbas/api-p2.git
 cd api-p2
 
-# Instalar dependências
+# Instale as dependências
 npm install
 
-# Configurar variáveis de ambiente
+# Configure variáveis de ambiente
 cp .env.example .env
-# Edite o .env com suas credenciais do PostgreSQL
+# Edite .env com suas credenciais
 
-# Iniciar servidor
+# Execute a aplicação
 npm start
 ```
 
-O servidor estará disponível em: http://localhost:3000
+A API estará disponível em: `http://localhost:3000`
 
-## �️ Banco de Dados
+### Variáveis de Ambiente
 
-### PostgreSQL no Render (Gratuito)
+```env
+# Banco de Dados
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=api_p2
+DB_USER=postgres
+DB_PASSWORD=sua_senha
 
-O projeto usa PostgreSQL hospedado no Render. Para configurar:
-
-1. Crie uma conta em [render.com](https://render.com)
-2. Crie um banco PostgreSQL (plano Free)
-3. Copie as credenciais para o arquivo `.env`
-
-**Estrutura da tabela `users`:**
-
-```sql
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL UNIQUE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+# Aplicação
+NODE_ENV=development
+PORT=3000
 ```
 
-## 📝 Endpoints
-
-### CRUD de Usuários (Funcional)
-
-- `GET /api/users` - Listar todos os usuários
-- `GET /api/users/:id` - Buscar usuário por ID
-- `POST /api/users` - Criar novo usuário
-- `PUT /api/users/:id` - Atualizar usuário
-- `DELETE /api/users/:id` - Deletar usuário
-
-### Endpoints Vulneráveis (Para SAST)
-
-- `GET /users/:id` - SQL Injection
-- `POST /execute` - Command Injection
-- `GET /download` - Path Traversal
-- `GET /search` - XSS
-- `POST /encrypt` - Weak Cryptography
-
-**Veja todos os endpoints na documentação Swagger!**
-
-## 🧪 Testes
-
-```bash
-# Executar testes
-npm test
-
-# Executar testes com cobertura
-npm run test:coverage
-
-# Verificar cobertura mínima
-npm run coverage:check
-```
+---
 
 ## 🐳 Docker
+
+### Build Local
 
 ```bash
 # Build da imagem
 docker build -t api-p2:latest .
 
-# Rodar container
+# Executar container
 docker run -p 3000:3000 \
-  -e DB_HOST=seu-host \
-  -e DB_USER=seu-usuario \
-  -e DB_PASSWORD=sua-senha \
+  -e DB_HOST=seu_host \
+  -e DB_PORT=5432 \
   -e DB_NAME=api_p2 \
-  -e DB_SSL=true \
+  -e DB_USER=seu_usuario \
+  -e DB_PASSWORD=sua_senha \
   api-p2:latest
 ```
 
-## 📊 Progresso do Projeto
+### Docker Hub
 
-### ✅ Concluído (8/10 tópicos - 80%)
+Imagens disponíveis em: `danielrodriguesadejarbas/api-p2`
 
-**Tópico 1: Estrutura Base da API**
-- [x] API Node.js com Express
-- [x] 18 endpoints vulneráveis
-- [x] Swagger/OpenAPI configurado
-- [x] CRUD de usuários
+```bash
+# Pull da imagem
+docker pull danielrodriguesadejarbas/api-p2:latest
 
-**Tópico 2: Docker**
-- [x] Dockerfile multi-stage otimizado
-- [x] .dockerignore configurado
-- [x] Health check e segurança
+# Executar
+docker run -p 3000:3000 danielrodriguesadejarbas/api-p2:latest
+```
 
-**Tópico 3: PostgreSQL + CRUD**
-- [x] Banco PostgreSQL no Render
-- [x] CRUD funcional testado
-- [x] Integração completa
+---
 
-**Tópico 4: Swagger**
-- [x] Documentação automática
-- [x] Interface interativa
-- [x] Todos endpoints documentados
+## 🔄 CI/CD Pipeline
 
-**Tópico 5: Git e Gitflow**
-- [x] Repositório configurado
-- [x] Branches main e develop
-- [x] Conventional Commits
+### Workflow CI (`.github/workflows/ci.yml`)
 
-**Tópico 6: GitHub Actions - CI**
-- [x] Workflow de CI
-- [x] Testes automatizados
-- [x] Cobertura de código
-- [x] SonarCloud configurado
+**Triggers:** Push e Pull Request para `main`
 
-**Tópico 7: Versionamento e Build Docker**
-- [x] Versionamento semântico automático
-- [x] Build automatizado com GitHub Actions
-- [x] Publicação no Docker Hub
-- [x] Tags automáticas (latest, sha, versão)
+**Steps:**
+1. ✅ Checkout do código
+2. ✅ Setup Node.js
+3. ✅ Instalação de dependências (`npm ci`)
+4. ✅ Execução de testes (`npm test`)
+5. ✅ **Análise SAST com SonarCloud**
 
-**Tópico 8: Deploy Render - CD**
-- [x] Deploy automático configurado
-- [x] Variáveis de ambiente
-- [x] Aplicação em produção
-- [x] URL pública: https://api-p2-latest.onrender.com
+### Workflow CD (`.github/workflows/docker-build.yml`)
 
-### 🔄 Próximos (2/10 tópicos)
+**Triggers:** Push de tags (`v*`)
 
-**Tópico 9: Monitoramento e Logs**
-- [ ] Configurar logs estruturados
-- [ ] Métricas de performance
-- [ ] Alertas de erro
+**Steps:**
+1. ✅ Checkout do código
+2. ✅ Geração de versão semântica
+3. ✅ Build da imagem Docker
+4. ✅ Push para Docker Hub (versão + latest)
+5. ✅ Deploy automático no Render
 
-**Tópico 10: Documentação Final**
-- [ ] Guias completos
-- [ ] Walkthrough do projeto
-- [ ] Apresentação para o professor
+---
 
-## �️ Tecnologias
+## 🔍 SonarCloud (SAST)
 
-- **Runtime**: Node.js 18
-- **Framework**: Express.js
-- **Banco**: PostgreSQL (Render)
-- **Docs**: Swagger/OpenAPI
-- **Container**: Docker
-- **CI/CD**: GitHub Actions
-- **SAST**: SonarCloud
-- **Deploy**: Render
-- **Registry**: Docker Hub
+### Dashboard
 
-## 🔒 Vulnerabilidades Intencionais
+Acesse: https://sonarcloud.io/project/overview?id=Adejarbas_api-p2
 
-1. SQL Injection
-2. Command Injection
-3. XSS
-4. Path Traversal
-5. XXE
-6. Hardcoded Credentials
-7. Weak Cryptography
-8. SSRF
-9. Code Injection
-10. ReDoS
-11. Insecure Random
-12. Prototype Pollution
-13. Mass Assignment
-14. Timing Attack
+### Vulnerabilidades Detectadas
 
-**Todas detectadas pelo SonarCloud!**
+- **8 Security Hotspots** (intencionais)
+- **Quality Gate:** Failed (esperado)
+- **Análise automática** a cada push
 
-## 👥 Contribuindo
+### Configuração
 
-Veja [CONTRIBUTING.md](CONTRIBUTING.md) para guia completo de Gitflow e Conventional Commits.
+Arquivo: `sonar-project.properties`
 
-## � Links
+```properties
+sonar.projectKey=Adejarbas_api-p2
+sonar.organization=adejarbas
+sonar.sources=src
+sonar.exclusions=node_modules/**,tests/**
+```
 
-- [Repositório](https://github.com/Adejarbas/api-p2)
-- [Render](https://render.com)
-- [SonarCloud](https://sonarcloud.io)
-- [Docker Hub](https://hub.docker.com)
+---
+
+## 📊 Endpoints
+
+### Documentação Interativa
+```
+GET /api-docs
+```
+Interface Swagger com todos os endpoints documentados.
+
+### CRUD de Usuários
+```
+GET    /api/users       # Listar todos
+POST   /api/users       # Criar novo
+GET    /api/users/:id   # Buscar por ID
+PUT    /api/users/:id   # Atualizar
+DELETE /api/users/:id   # Deletar
+```
+
+### Monitoramento
+```
+GET /health    # Status da aplicação e banco
+GET /metrics   # Métricas de performance
+```
+
+### Endpoints Vulneráveis (SAST)
+```
+GET  /users/:id         # SQL Injection
+POST /execute           # Command Injection
+GET  /download          # Path Traversal
+GET  /search            # XSS
+POST /encrypt           # Weak Cryptography
+GET  /fetch             # SSRF
+POST /eval              # Code Injection
+```
+
+---
+
+## 📁 Estrutura do Projeto
+
+```
+api-p2/
+├── .github/
+│   └── workflows/
+│       ├── ci.yml              # CI: testes + SonarCloud
+│       └── docker-build.yml    # CD: build + push Docker
+├── src/
+│   ├── config/
+│   │   └── logger.js           # Configuração Winston
+│   ├── middleware/
+│   │   ├── errorHandler.js     # Error handling
+│   │   ├── logging.js          # HTTP logging (Morgan)
+│   │   └── metrics.js          # Métricas de performance
+│   ├── routes/
+│   │   ├── health.js           # Health check
+│   │   └── users.js            # CRUD de usuários
+│   └── app.js                  # Aplicação principal
+├── tests/
+│   └── app.test.js             # Testes
+├── .dockerignore               # Arquivos ignorados no Docker
+├── .env.example                # Exemplo de variáveis
+├── .gitignore                  # Arquivos ignorados no Git
+├── CONTRIBUTING.md             # Guia de contribuição
+├── Dockerfile                  # Imagem Docker
+├── package.json                # Dependências
+├── README.md                   # Este arquivo
+└── sonar-project.properties    # Configuração SonarCloud
+```
+
+---
+
+## 🧪 Testes
+
+### Executar Testes
+
+```bash
+npm test
+```
+
+### Cobertura
+
+```bash
+npm run test:coverage
+```
+
+---
+
+## 📝 Desenvolvimento
+
+### Gitflow
+
+- **main:** Produção
+- **develop:** Desenvolvimento
+
+### Conventional Commits
+
+Seguimos o padrão de [Conventional Commits](./CONTRIBUTING.md):
+
+```
+feat: adiciona novo endpoint
+fix: corrige erro de validação
+chore: atualiza dependências
+docs: atualiza README
+```
+
+---
+
+## 🚢 Deploy
+
+### Render
+
+1. **Web Service:** `api-p2-latest`
+2. **Runtime:** Docker
+3. **Image:** `docker.io/danielrodriguesadejarbas/api-p2:latest`
+4. **Banco:** PostgreSQL (Render)
+
+### Variáveis de Ambiente (Render)
+
+```
+DB_HOST=<render_postgres_host>
+DB_PORT=5432
+DB_NAME=api_p2
+DB_USER=api_p2_user
+DB_PASSWORD=<senha>
+NODE_ENV=production
+PORT=3000
+```
+
+
+---
+
+## 📄 Licença
+
+Este projeto é para fins educacionais. Não use em produção.
+
+---
+
+## 👨‍💻 Autor
+
+**Daniel Rodrigues Adejarbas**
+
+- GitHub: [@Adejarbas](https://github.com/Adejarbas)
+- Docker Hub: [danielrodriguesadejarbas](https://hub.docker.com/u/danielrodriguesadejarbas)
+
+---
+
+## 🙏 Agradecimentos
+
+- Professor: **Felipe medeiros**
+- Código base: [api-sast](https://github.com/festmedeiros/api-sast)
+- Ferramentas: GitHub Actions, SonarCloud, Docker, Render
+
+---
+
+## ⚠️ Avisos Importantes
+
+1. **Vulnerabilidades Intencionais:** Esta API contém falhas de segurança propositais para demonstração de ferramentas SAST.
+2. **Não use em produção:** O código não deve ser usado em ambientes reais.
+3. **Fins educacionais:** Projeto desenvolvido exclusivamente para aprendizado de DevSecOps.
+
+---
+
+
