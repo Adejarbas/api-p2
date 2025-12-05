@@ -1,0 +1,68 @@
+name: Versionamento Automático
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  versionar:
+    name: Gerar Versão Automática
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+      - name: Gerar nova versão
+        id: versao
+        uses: mathieudutour/github-tag-action@v6.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          default_bump: patch
+          release_branches: main
+          pre_release_branches: develop
+          tag_prefix: v
+          custom_release_rules: |
+            feat:minor:Novas Funcionalidades
+            fix:patch:Correções de Bugs
+            docs:patch:Documentação
+            style:patch:Formatação
+            refactor:patch:Refatoração
+            perf:patch:Performance
+            test:patch:Testes
+            build:patch:Build
+            ci:patch:CI/CD
+            chore:patch:Manutenção
+      
+      - name: Resumo da Versão
+        if: steps.versao.outputs.new_tag
+        run: |
+          echo "### 🏷️ Nova Versão Criada! ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Versão:** \`${{ steps.versao.outputs.new_tag }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Versão Anterior:** \`${{ steps.versao.outputs.previous_tag }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Changelog:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.versao.outputs.changelog }}" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Build Docker será executado automaticamente!**" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Nenhuma mudança
+        if: steps.versao.outputs.new_tag == ''
+        run: |
+          echo "### ℹ️ Nenhuma Nova Versão" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Nenhuma mudança significativa detectada desde a última versão." >> $GITHUB_STEP_SUMMARY
