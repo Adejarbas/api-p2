@@ -1,6 +1,7 @@
 // src/app.js - Aplicação Express com vulnerabilidades intencionais para SAST
 
 const express = require('express');
+const cors = require('cors');
 const mysql = require('mysql');
 const crypto = require('crypto');
 const { exec } = require('child_process');
@@ -17,6 +18,13 @@ const { metricsMiddleware, getMetrics } = require('./middleware/metrics');
 const healthRouter = require('./routes/health');
 
 const app = express();
+
+// Configurar CORS (permitir todas as origens para desenvolvimento/demonstração)
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Middlewares de logging e métricas (antes das rotas)
 app.use(httpLogger);
